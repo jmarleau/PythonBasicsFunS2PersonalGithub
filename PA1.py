@@ -1,4 +1,4 @@
-
+# TODO make the filename an input and parameter
 infile = open("ny.ppm", "r")
 
 x = []
@@ -10,13 +10,13 @@ line_counter = 1
 space_num = 0
 
 
-
+# TODO convert this to a function and add docstring
 for line in infile:
     if line_counter > 4:
         for char in line:
             if char != " " and char != "\n":
                 q.append(char)
-            else:
+            elif char == " ":
                 z.append(q)
                 q = []  
             if len(z) == 3:
@@ -29,6 +29,7 @@ for line in infile:
 
 infile.close()
 
+# TODO add a docstring
 def apply_modification():
     print("Please select the image modification you would like to make \n")
     print("1: Apply Vertical Flip")
@@ -44,10 +45,66 @@ def apply_modification():
         modification = int(input("\nPlease enter a number: "))
     return modification
 
+# TODO Add a docstring
+def write_image():
+    outfile = open("modified_ny.ppm", "w")
+    print("Creating new image...")
+    width = 0
+    outfile.write("P3\n960 639\n255\n\n")
+    """
+    for pixel_num in x: # iterating too many times?
+        for color in pixel_num:
+            if width == 960:
+                width = 0
+                outfile.write("\n")
+            for value in color:
+                outfile.write(" ")
+                width += 1
+                for num in value:
+                    outfile.write(num)
+    """
+    for pixel_num in x[0]:
+        width += 1
+        for color in pixel_num:
+            if width == 960:
+                width = 0
+                outfile.write("\n")
+            else:
+                outfile.write(" ")
+            for value in color:
+                for num in value:
+                    outfile.write(num)
+                    
+                    
 
-# outfile = open("modified_ny.ppm", "w")
-# for pixel_num in x:
-#     for color in pixel_num:
-#         for value in color:
-#             outfile.write(value)
-            
+
+    outfile.close()
+    print("Creation Complete")
+
+
+def remove_red():
+    outfile = open("modified_ny.ppm", "w")
+    print("Creating new image...")
+    width = 0
+    red = 0
+    outfile.write("P3\n960 639\n255\n")
+    for pixel_num in x:
+        for color in pixel_num:
+            if width == 960:
+                width = 0
+                outfile.write("\n")
+            for value in color:
+                outfile.write(" ")
+                width += 1
+                red += 1
+                if red % 3 == 0:
+                        outfile.write("0")
+                        red = 0
+                        break
+                for num in value:
+                    outfile.write(num)
+    outfile.close()
+    print("Creation Complete")
+
+write_image()
+
