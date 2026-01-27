@@ -49,7 +49,7 @@ def apply_modification():
 def write_image():
     outfile = open("modified_ny.ppm", "w")
     print("Creating new image...")
-    width = 0
+    width = -1
     outfile.write("P3\n960 639\n255\n\n")
     """
     for pixel_num in x: # iterating too many times?
