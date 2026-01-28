@@ -51,18 +51,7 @@ def write_image():
     print("Creating new image...")
     width = -1
     outfile.write("P3\n960 639\n255\n\n")
-    """
-    for pixel_num in x: # iterating too many times?
-        for color in pixel_num:
-            if width == 960:
-                width = 0
-                outfile.write("\n")
-            for value in color:
-                outfile.write(" ")
-                width += 1
-                for num in value:
-                    outfile.write(num)
-    """
+    
     for pixel_num in x[0]:
         width += 1
         for color in pixel_num:
@@ -73,11 +62,7 @@ def write_image():
                 outfile.write(" ")
             for value in color:
                 for num in value:
-                    outfile.write(num)
-                    
-                    
-
-
+                    outfile.write(num) # remove this redundant block
     outfile.close()
     print("Creation Complete")
 
@@ -85,26 +70,56 @@ def write_image():
 def remove_red():
     outfile = open("modified_ny.ppm", "w")
     print("Creating new image...")
-    width = 0
+    width = -1
+    outfile.write("P3\n960 639\n255\n\n")
     red = 0
-    outfile.write("P3\n960 639\n255\n")
-    for pixel_num in x:
+    for pixel_num in x[0]:
+        width += 1
         for color in pixel_num:
+            red += 1
+            if red == 3:
+                outfile.write(" 0")
+                red = 0
+                break
             if width == 960:
                 width = 0
                 outfile.write("\n")
-            for value in color:
+            else:
                 outfile.write(" ")
-                width += 1
-                red += 1
-                if red % 3 == 0:
-                        outfile.write("0")
-                        red = 0
-                        break
+            for value in color:     
                 for num in value:
-                    outfile.write(num)
+                    outfile.write(num)  # remove this redunant block
     outfile.close()
     print("Creation Complete")
 
-write_image()
+
+def compute_negative():
+    outfile = open("modified_ny.ppm", "w")
+    print("Creating new image...")
+    width = -1
+    concat_num = "yes" 
+    outfile.write("P3\n960 639\n255\n\n")
+    for pixel_num in x[0]:
+        width += 1
+        for color in pixel_num:
+            if concat_num != "yes":
+                integer_of_concat_num = int(concat_num)
+                subtraction = 255 - integer_of_concat_num
+                concat_num = str(subtraction)
+                outfile.write(concat_num)
+            if width == 960:
+                width = 0
+                outfile.write("\n") # new-line cycling is one off
+            else:
+                outfile.write(" ")
+
+
+            concat_num = "" 
+            for value in color:
+                concat_num += value
+                
+    outfile.close()
+    print("Creation Complete")
+
+compute_negative()
 
