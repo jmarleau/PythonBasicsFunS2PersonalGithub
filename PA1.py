@@ -7,7 +7,7 @@ z = []
 q = []
 
 line_counter = 1
-space_num = 0
+
 
 
 # TODO convert this to a function and add docstring
@@ -22,8 +22,8 @@ for line in infile:
             if len(z) == 3:
                 y.append(z)
                 z = []
-            if len(y) == 3:
-                x.append(y)
+            # if len(y) == 3:
+            #     x.append(y)
                 
     line_counter += 1
 
@@ -109,11 +109,9 @@ def compute_negative():
                 outfile.write(concat_num)
             if width == 960:
                 width = 0
-                outfile.write("\n") # new-line cycling is one off
+                outfile.write("\n")
             else:
                 outfile.write(" ")
-
-
             concat_num = "" 
             for value in color:
                 concat_num += value
@@ -121,5 +119,89 @@ def compute_negative():
     outfile.close()
     print("Creation Complete")
 
-compute_negative()
+def flip_horizontally(): # find and delete extra first line
 
+    outfile = open("modified_ny.ppm", "w")
+    print("Creating new image...")
+    width = -1
+    outfile.write("P3\n960 639\n255\n\n")
+    
+    t = []
+    for u in range(0,640): # find and fix first / last line error
+        for b in range((960*u - 960),(960*u)):
+            t.append(y[b])
+        t.reverse()
+        for list in t:
+            width += 1
+            for num in list:
+                if width == 960:
+                    width = 0
+                    outfile.write("\n")
+                else:
+                    outfile.write(" ")
+                for indiv in num:
+                    outfile.write(indiv)
+        t = []
+
+def flip_vertically():
+    outfile = open("modified_ny.ppm", "w")
+    print("Creating new image...")
+    width = -1
+    outfile.write("P3\n960 639\n255\n\n")
+    
+    t = []
+    h = []
+    for u in range(0,639):
+        for b in range((960*u - 960),(960*u)):
+            t.append(y[b])
+        h.insert(0 , t)
+        t = []
+
+    for list in h:
+        for num in list: 
+            width += 1 
+            if width == 960:
+                width = 0
+                outfile.write("\n")
+            for indiv in num:
+                if width != 960:
+                    outfile.write(" ")
+                for char in indiv:
+                    outfile.write(char)
+
+
+def compute_high_contrast():
+    outfile = open("modified_ny.ppm", "w")
+    print("Creating new image...")
+    width = -1
+    outfile.write("P3\n960 639\n255\n\n")
+    
+    for pixel_num in y:
+        width += 1
+        for color in pixel_num:
+            if width == 960:
+                width = 0
+                outfile.write("\n")
+            else:
+                outfile.write(" ")
+            concat = ""
+            for value in color:
+                concat += value
+                compare = int(concat)
+                if compare <= 127: # adding extra zeros
+                    compare = 0
+                else:
+                    compare = 255
+                str_compare = str(compare)
+                outfile.write(str_compare)
+                
+    outfile.close()
+    print("Creation Complete")
+
+def compute_gray_scale():
+    pass
+
+
+write_image()
+
+# close all files at the end
